@@ -39,7 +39,7 @@ const displayCategory = (data) => {
     const animalCategory = document.getElementById("animalCategory");
 
     for (category of data) {
-        
+
         const div = document.createElement("div")
         div.innerHTML = `
         <button onclick="loadCategoryButton('${category.category}')" class="btn btn-xl bg-white p-10">
@@ -77,8 +77,8 @@ const displayCategory = (data) => {
 // }
 
 const loadAllPets = async () => {
-    
-    
+
+
 
     const res = await fetch("https://openapi.programming-hero.com/api/peddy/pets")
     const data = await res.json()
@@ -89,7 +89,7 @@ const showLikedPetImage = (image) => {
     console.log(image)
     const likedPetContainer = document.getElementById("likedPetsCardContainer");
     const div = document.createElement("div");
-    
+
     div.innerHTML = `
     <img class="object-contain"
     
@@ -101,15 +101,49 @@ const showLikedPetImage = (image) => {
     likedPetContainer.appendChild(div)
 }
 
+
+const sorted = (allPetsReceived,flag =false) => {
+    console.log("sorted", allPetsReceived,flag)
+    const secondaryAllPetsReceived = [...allPetsReceived]
+    
+    if (secondaryAllPetsReceived.length != 0){
+        console.log(secondaryAllPetsReceived)
+        const sortedArrayOfObject = secondaryAllPetsReceived.sort((a, b) => b.price - a.price)
+    
+
+    if (flag == true){
+        
+        displayAllPets(sortedArrayOfObject);
+        flag = false
+
+    }
+    else {
+        return
+    }
+
+    }
+    
+    
+
+}
+
+
+
+
+
 const displayAllPets = (allPets) => {
+    console.log("displayAll",[...allPets])
+    document.getElementById("sortButton").addEventListener("click",function(){
+        sorted(allPets,true)
+    })
 
     const allPetsCardContainer = document.getElementById('allPetsCardContainer');
-    allPetsCardContainer.innerHTML =""
-    if (allPets.length ==0){
+    allPetsCardContainer.innerHTML = ""
+    if (allPets.length == 0) {
         const div = document.createElement("div");
-        div.classList.add("w-[910px]","col-span-3","flex","justify-center","items-center","text-center")
-        
-        
+        div.classList.add("w-[910px]", "col-span-3", "flex", "justify-center", "items-center", "text-center")
+
+
         div.innerHTML = `
         <div class="text-center ">
             <img class="justify-center w-70 h-70  mx-auto object-cover" src="images/error.webp">
@@ -121,12 +155,12 @@ const displayAllPets = (allPets) => {
         allPetsCardContainer.appendChild(div)
 
     }
-    else{
+    else {
         for (pets of allPets) {
             const div = document.createElement("div");
-            
-            
-    
+
+
+
             div.innerHTML = `
             <div class="card bg-base-100 w-73 shadow-sm">
                 <figure>
@@ -138,7 +172,7 @@ const displayAllPets = (allPets) => {
                     <h2 class="card-title">${pets.pet_name}</h2>
                     <div class="font-light text-gray-500">
                         <p>Breed: ${pets.breed}</p>
-                        <p>Birth: ${pets.date_of_birth? pets.date_of_birth  :"Not Available"} </p>
+                        <p>Birth: ${pets.date_of_birth ? pets.date_of_birth : "Not Available"} </p>
                         <p>Gender: ${pets.gender} </p>
                         <p>Price: ${pets.price}$</p>
                     </div>
@@ -163,21 +197,21 @@ const displayAllPets = (allPets) => {
             
             `
             allPetsCardContainer.appendChild(div)
-    
+
         }
     }
 }
 
 // load catagories button wise
 
-const loadCategoryButton = async(animalName) => {
+const loadCategoryButton = async (animalName) => {
     loadingSpinner()
-    
+
     const res = await fetch(`https://openapi.programming-hero.com/api/peddy/category/${animalName}`);
     const data = await res.json();
-    
+
     displayAllPets(data.data)
-    
+
 
 }
 
@@ -196,9 +230,9 @@ const loadCategoryButton = async(animalName) => {
 //     "pet_name": "Nibbles"
 // }
 
-const detailsButton = async(pets) => {
+const detailsButton = async (pets) => {
 
-    
+
     const res = await fetch(`https://openapi.programming-hero.com/api/peddy/pet/${pets}`);
     const petDetailsById = await res.json();
     const petData = petDetailsById.petData
@@ -206,7 +240,7 @@ const detailsButton = async(pets) => {
     const detailsButton = document.getElementById("detailsButton");
     const detailsContainer = document.getElementById("detailsContainer");
 
-    
+
 
     detailsContainer.innerHTML = `
         <img class="w-130 mb-5" src="${petData.image}">
@@ -237,11 +271,11 @@ const loadingSpinner = () => {
     const allPetsCardContainer = document.getElementById("allPetsCardContainer");
     allPetsCardContainer.classList.add("hidden")
 
-    setTimeout(() =>{
+    setTimeout(() => {
         loading.classList.add("hidden")
         allPetsCardContainer.classList.remove("hidden")
 
-    },2000)
+    }, 2000)
 }
 
 
